@@ -3,4 +3,10 @@ __pycache__/
 *.wav
 *.mp3
 *.sqlite
+*.db
 .env
+.DS_Store
+recordings/
+*.pyc
+.pytest_cache/
+.coverage

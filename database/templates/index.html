@@ -1,33 +1,505 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Speech Feedback Tool</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Speech Advisory - Your Personal Speaking Coach</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
         }
+
         .container {
-            max-width: 600px;
-            margin: auto;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        input[type="file"] {
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-section {
+            text-align: center;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
             margin-bottom: 20px;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 40px 20px;
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            background: #f8f9ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .file-upload-label i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .file-upload-label p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .record-section {
+            text-align: center;
+        }
+
+        .record-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            background: #ff4757;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .record-button:hover {
+            background: #ff3742;
+            transform: scale(1.1);
+        }
+
+        .record-button.recording {
+            background: #2ed573;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            background: #f8f9ff;
+        }
+
+        .result-item h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-item p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .feature i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature h3 {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Upload Your Audio</h2>
-        <form action="/upload" method="post" enctype="multipart/form-data">
-            <input type="file" name="audio_file" accept=".wav,.mp3,.m4a" required>
-            <br>
-            <button type="submit">Submit</button>
-        </form>
+        <div class="header">
+            <h1><i class="fas fa-microphone"></i> AI Speech Advisory</h1>
+            <p>Your Personal Speaking Coach - Get instant feedback on your presentations</p>
+        </div>
+
+        <div class="main-content">
+            <div class="card upload-section">
+                <h2><i class="fas fa-upload"></i> Upload Audio File</h2>
+                <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+                    <div class="file-upload">
+                        <input type="file" name="audio_file" id="audioFile" accept=".wav,.mp3,.m4a,.flac" required>
+                        <label for="audioFile" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Click to upload or drag and drop<br>
+                            <small>Supports: WAV, MP3, M4A, FLAC</small></p>
+                        </label>
+                    </div>
+                    <button type="submit" class="submit-btn" id="uploadBtn">
+                        <i class="fas fa-upload"></i> Analyze Audio
+                    </button>
+                </form>
+            </div>
+
+            <div class="card record-section">
+                <h2><i class="fas fa-microphone"></i> Record Live</h2>
+                <button class="record-button" id="recordBtn">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <div class="timer" id="timer">00:00</div>
+                <button class="submit-btn" id="recordSubmitBtn" disabled>
+                    <i class="fas fa-play"></i> Start Recording
+                </button>
+            </div>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <h2><i class="fas fa-chart-line"></i> Analysis Results</h2>
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Analyzing your speech...</p>
+            </div>
+            <div id="results" style="display: none;">
+                <div class="result-item">
+                    <h3><i class="fas fa-file-alt"></i> Transcript</h3>
+                    <p id="transcriptText"></p>
+                </div>
+                <div class="result-item">
+                    <h3><i class="fas fa-comments"></i> Filler Word Analysis</h3>
+                    <p id="fillerAnalysis"></p>
+                </div>
+                <div class="result-item">
+                    <h3><i class="fas fa-lightbulb"></i> AI Feedback</h3>
+                    <p id="aiFeedback"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-brain"></i>
+                <h3>AI Analysis</h3>
+                <p>Advanced speech pattern recognition</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-chart-bar"></i>
+                <h3>Detailed Metrics</h3>
+                <p>Comprehensive speaking analytics</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-clock"></i>
+                <h3>Instant Feedback</h3>
+                <p>Real-time analysis and suggestions</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Privacy First</h3>
+                <p>Your audio stays on your device</p>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // File upload handling
+        const fileInput = document.getElementById('audioFile');
+        const fileLabel = document.querySelector('.file-upload-label');
+        const uploadForm = document.getElementById('uploadForm');
+        const resultsSection = document.getElementById('resultsSection');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileLabel.innerHTML = `
+                    <i class="fas fa-check-circle" style="color: #2ed573;"></i>
+                    <p>${file.name}<br><small>Ready to analyze</small></p>
+                `;
+            }
+        });
+
+        uploadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(uploadForm);
+            
+            resultsSection.classList.add('show');
+            loading.style.display = 'block';
+            results.style.display = 'none';
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                results.style.display = 'block';
+                
+                if (data.success) {
+                    document.getElementById('transcriptText').textContent = data.transcript;
+                    document.getElementById('fillerAnalysis').textContent = data.filler_analysis;
+                    document.getElementById('aiFeedback').textContent = data.ai_feedback;
+                } else {
+                    document.getElementById('transcriptText').textContent = 'Error: ' + data.error;
+                    document.getElementById('fillerAnalysis').textContent = 'Analysis failed';
+                    document.getElementById('aiFeedback').textContent = 'Feedback unavailable';
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                results.style.display = 'block';
+                document.getElementById('transcriptText').textContent = 'Error processing audio';
+                document.getElementById('fillerAnalysis').textContent = 'Analysis failed';
+                document.getElementById('aiFeedback').textContent = 'Feedback unavailable';
+                console.error('Error:', error);
+            });
+        });
+
+        // Recording functionality
+        const recordBtn = document.getElementById('recordBtn');
+        const recordSubmitBtn = document.getElementById('recordSubmitBtn');
+        const timer = document.getElementById('timer');
+        let isRecording = false;
+        let startTime;
+        let timerInterval;
+
+        recordSubmitBtn.addEventListener('click', function() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        });
+
+        function startRecording() {
+            isRecording = true;
+            recordBtn.classList.add('recording');
+            recordSubmitBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Recording';
+            recordSubmitBtn.style.background = '#ff4757';
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            recordBtn.classList.remove('recording');
+            recordSubmitBtn.innerHTML = '<i class="fas fa-play"></i> Start Recording';
+            recordSubmitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            clearInterval(timerInterval);
+            timer.textContent = '00:00';
+        }
+
+        function updateTimer() {
+            const elapsed = Date.now() - startTime;
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Drag and drop functionality
+        const dropZone = document.querySelector('.file-upload-label');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.style.borderColor = '#764ba2';
+            dropZone.style.background = '#f0f2ff';
+        }
+
+        function unhighlight(e) {
+            dropZone.style.borderColor = '#667eea';
+            dropZone.style.background = '#f8f9ff';
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            
+            if (files.length > 0) {
+                fileLabel.innerHTML = `
+                    <i class="fas fa-check-circle" style="color: #2ed573;"></i>
+                    <p>${files[0].name}<br><small>Ready to analyze</small></p>
+                `;
+            }
+        }
+    </script>
 </body>
 </html>
