@@ -36,7 +36,10 @@ def upload_audio():
     # Save to DB
     save_transcript_and_feedback(transcript, feedback)
 
-    return f"<h3>Transcript:</h3><p>{transcript}</p><h3>Feedback:</h3><p>{feedback}</p>"
+    return (
+        f"<h3>Transcript:</h3><p>{transcript}</p>"
+        f"<h3>Feedback:</h3><p>{feedback}</p>"
+    )
 
 
 if __name__ == "__main__":
