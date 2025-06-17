@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🎤 AI Speech Advisory
 
 Your Personal Speaking Coach - Get instant feedback on your presentations and improve your speaking skills with AI-powered analysis.
@@ -193,6 +194,22 @@ If you encounter any issues:
 ---
 
 **Made with ❤️ for better public speaking**
+=======
+# 🗣️ AI Speech Advisory Tool
+
+A lightweight AI-powered assistant that provides intelligent feedback on mock interview speech. This tool helps job seekers, students, and professionals improve their spoken communication by analyzing their voice, identifying filler words, and offering constructive feedback using large language models (LLMs).
+
+---
+
+## 🚀 Features
+
+- 🎙️ Upload `.wav` or `.mp3` audio files
+- 🧠 Transcribes speech using OpenAI Whisper
+- 🔍 Detects filler words like "uh", "um", "like"
+- 🤖 GPT-4 generates feedback on clarity, confidence, and structure
+- 🔊 Optional voice-based feedback using TTS
+- 🧾 Stores results in a local SQLite database
+>>>>>>> 1f8a9ca78796d6addb3a8b807d3a6100e36ee739
 
 ---
 

@@ -1,8 +1,9 @@
-venv/
+venv310/
 __pycache__/
 *.wav
 *.mp3
 *.sqlite
+<<<<<<< HEAD
 *.db
 .env
 .DS_Store
@@ -10,3 +11,7 @@ recordings/
 *.pyc
 .pytest_cache/
 .coverage
+=======
+.env
+firebase_key.json
+>>>>>>> 1f8a9ca78796d6addb3a8b807d3a6100e36ee739

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # db_utils.py
 
 from .db_setup import get_db_connection
@@ -40,3 +41,23 @@ def get_recent_feedback(limit: int = 10):
     except Exception as e:
         print(f"[ERROR] Failed to retrieve from database: {e}")
         return []
+=======
+import firebase_admin
+from firebase_admin import credentials, firestore
+import datetime
+
+cred = credentials.Certificate("firebase_key.json")
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
+
+db = firestore.client()
+
+
+def save_transcript_and_feedback(transcript, feedback):
+    data = {
+        "transcript": transcript,
+        "feedback": feedback,
+        "timestamp": datetime.datetime.utcnow()
+    }
+    db.collection("speech_feedback").add(data)
+>>>>>>> 1f8a9ca78796d6addb3a8b807d3a6100e36ee739
