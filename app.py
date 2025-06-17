@@ -1,7 +1,8 @@
-
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+from transcription.transcribe import transcribe_audio
+from analysis.filler_counter import count_filler_words
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -21,8 +22,6 @@ def get_feedback(transcript):
     )
     return response.choices[0].message.content
 
-from transcription.transcribe import transcribe_audio
-from analysis.analyze import count_filler_words
 
 transcript = transcribe_audio("recordings/user_audio.wav")
 
@@ -32,4 +31,3 @@ if transcript:
     print("\nFiller Word Feedback:\n", feedback)
 else:
     print("No transcript generated.")
->>>>>>> 5a52cfe860c15b604317105404cb72de7f413364
