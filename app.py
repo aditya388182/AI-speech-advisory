@@ -1,5 +1,6 @@
 import os
 import json
+import traceback
 from flask import Flask, render_template, request, redirect, jsonify
 from transcription.transcribe import transcribe_audio
 from analysis.filler_counter import count_filler_words
@@ -74,6 +75,7 @@ def upload_audio():
 
     except Exception as e:
         print(f"[ERROR] Error processing audio: {str(e)}")
+        traceback.print_exc()
         return jsonify({
             "success": False,
             "error": f"Error processing audio: {str(e)}. Please try again with a different audio file."
@@ -127,6 +129,7 @@ def analyze_text():
 
     except Exception as e:
         print(f"[ERROR] Error analyzing text: {str(e)}")
+        traceback.print_exc()
         return jsonify({
             "success": False,
             "error": f"Error analyzing text: {str(e)}"
