@@ -34,26 +34,34 @@ def upload_audio():
     if file_ext not in allowed_extensions:
         return jsonify({"error": "Invalid file type. Please upload WAV, MP3, M4A, or FLAC files."}), 400
 
+    audio_path = None
     try:
         # Save the uploaded file
         audio_path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
         file.save(audio_path)
 
         # Transcribe audio
+        print(f"[INFO] Transcribing audio file: {audio_path}")
         transcript = transcribe_audio(audio_path)
+        
+        if not transcript or not transcript.strip():
+            return jsonify({
+                "success": False,
+                "error": "Could not transcribe audio. Please ensure the audio file contains clear speech and try again."
+            }), 400
 
         # Analyze filler words
+        print(f"[INFO] Analyzing filler words in transcript")
         filler_analysis = count_filler_words(transcript)
         filler_count = sum(1 for word in transcript.lower().split() if word in ['um', 'uh', 'like', 'you', 'know', 'so', 'actually', 'basically', 'literally', 'well', 'okay', 'right'])
 
         # Get AI feedback
+        print(f"[INFO] Generating AI feedback")
         ai_feedback = get_feedback(transcript)
 
         # Save to database
+        print(f"[INFO] Saving to database")
         save_transcript_and_feedback(transcript, ai_feedback, filler_count)
-
-        # Clean up the uploaded file
-        os.remove(audio_path)
 
         # Return JSON response
         return jsonify({
@@ -65,10 +73,19 @@ def upload_audio():
         })
 
     except Exception as e:
-        # Clean up file if it exists
-        if os.path.exists(audio_path):
-            os.remove(audio_path)
-        return jsonify({"error": f"Error processing audio: {str(e)}"}), 500
+        print(f"[ERROR] Error processing audio: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": f"Error processing audio: {str(e)}. Please try again with a different audio file."
+        }), 500
+    finally:
+        # Clean up the uploaded file
+        if audio_path and os.path.exists(audio_path):
+            try:
+                os.remove(audio_path)
+                print(f"[INFO] Cleaned up temporary file: {audio_path}")
+            except Exception as e:
+                print(f"[WARNING] Could not remove temporary file {audio_path}: {e}")
 
 
 @app.route("/analyze-text", methods=["POST"])
@@ -81,14 +98,23 @@ def analyze_text():
 
         transcript = data['text']
         
+        if not transcript or not transcript.strip():
+            return jsonify({
+                "success": False,
+                "error": "Please provide some text to analyze."
+            }), 400
+        
         # Analyze filler words
+        print(f"[INFO] Analyzing filler words in text input")
         filler_analysis = count_filler_words(transcript)
         filler_count = sum(1 for word in transcript.lower().split() if word in ['um', 'uh', 'like', 'you', 'know', 'so', 'actually', 'basically', 'literally', 'well', 'okay', 'right'])
 
         # Get AI feedback
+        print(f"[INFO] Generating AI feedback for text input")
         ai_feedback = get_feedback(transcript)
 
         # Save to database
+        print(f"[INFO] Saving text analysis to database")
         save_transcript_and_feedback(transcript, ai_feedback, filler_count)
 
         return jsonify({
@@ -100,7 +126,11 @@ def analyze_text():
         })
 
     except Exception as e:
-        return jsonify({"error": f"Error analyzing text: {str(e)}"}), 500
+        print(f"[ERROR] Error analyzing text: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": f"Error analyzing text: {str(e)}"
+        }), 500
 
 
 @app.route("/health")

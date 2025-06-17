@@ -1,230 +1,174 @@
-<<<<<<< HEAD
 # 🎤 AI Speech Advisory
 
-Your Personal Speaking Coach - Get instant feedback on your presentations and improve your speaking skills with AI-powered analysis.
+Your personal AI-powered speaking coach that analyzes speech patterns, identifies filler words, and provides constructive feedback to improve your public speaking skills.
 
 ## ✨ Features
 
-- **🎵 Audio Upload & Transcription** - Upload audio files (WAV, MP3, M4A, FLAC) for automatic transcription
-- **📝 Text Input Analysis** - Directly paste your speech text for instant feedback
-- **🧠 AI-Powered Feedback** - Get personalized suggestions to improve your speaking
-- **📊 Filler Word Detection** - Identify and count filler words in your speech
-- **📈 Speaking Analytics** - Track your speaking metrics and progress
-- **💾 Database Storage** - Save your analysis history for tracking improvement
-- **🎨 Modern UI** - Beautiful, responsive interface available in both web and dashboard formats
+- **🎵 Audio Upload**: Support for WAV, MP3, M4A, and FLAC files
+- **🎙️ Live Recording**: Record your speech directly in the browser
+- **🤖 AI Analysis**: Advanced speech pattern recognition and feedback
+- **📊 Filler Word Detection**: Identifies common filler words like "um", "uh", "like", etc.
+- **💡 Smart Feedback**: Personalized suggestions to improve speaking skills
+- **📱 Modern UI**: Beautiful, responsive interface
+- **💾 Data Storage**: Save and review your speaking history
 
 ## 🚀 Quick Start
 
-### Option 1: Easy Launcher (Recommended)
+### Option 1: Flask Web App (Recommended)
 ```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the Flask app
+python app.py
+
+# Open in browser: http://127.0.0.1:5001
+```
+
+### Option 2: Streamlit Dashboard
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run Streamlit
+streamlit run UI/interface.py
+
+# Open in browser: http://localhost:8501
+```
+
+### Option 3: Launcher Script
+```bash
+# Use the launcher to choose your interface
 python run_app.py
 ```
-This will give you a menu to choose between Flask web interface and Streamlit dashboard.
 
-### Option 2: Manual Launch
+## 🔧 Setup
 
-#### Flask Web Interface
-```bash
-python app.py
-```
-Then open http://localhost:5000 in your browser.
-
-#### Streamlit Dashboard
-```bash
-streamlit run UI/interface.py
-```
-Then open http://localhost:8501 in your browser.
-
-## 📦 Installation
-
-1. **Clone the repository**
-```bash
-git clone <repository-url>
-cd AI-speech-advisory
-```
-
-2. **Install dependencies**
+### 1. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-3. **Set up environment variables** (optional)
-Create a `.env` file in the root directory:
-```env
-OPENAI_API_KEY=your_openai_api_key_here
+### 2. Optional: Enhanced AI Feedback
+For enhanced AI feedback, create a `.env` file:
+```bash
+# Copy the example file
+cp env_example.txt .env
+
+# Edit .env and add your Together AI API key
+# Get a free API key at: https://together.ai/
+TOGETHER_API_KEY=your_api_key_here
 ```
 
-## 🎯 How to Use
+**Note**: The app works without an API key, but provides basic feedback instead of advanced AI analysis.
 
-### 🌐 Flask Web Interface
-1. **Upload Audio**: Drag and drop or click to upload an audio file
-2. **Record Live**: Use the recording feature (coming soon)
-3. **Get Analysis**: View transcript, filler word count, and AI feedback
-4. **Track Progress**: All analyses are saved to the database
-
-### 📊 Streamlit Dashboard
-1. **Choose Input Method**: Select from text input, audio upload, or voice recording
-2. **Enter Content**: Paste your speech text or upload an audio file
-3. **View Results**: See comprehensive analysis with metrics and suggestions
-4. **Monitor Stats**: Track your speaking performance over time
-
-## 🏗️ Project Structure
+## 📁 Project Structure
 
 ```
 AI-speech-advisory/
 ├── app.py                 # Main Flask application
-├── run_app.py            # Application launcher
+├── run_app.py            # Launcher script
 ├── requirements.txt      # Python dependencies
-├── README.md            # This file
 ├── analysis/            # Speech analysis modules
 │   └── filler_counter.py
-├── audio_upload/        # Audio upload handling
+├── audio_upload/        # Audio processing
 │   └── upload_audio.py
 ├── database/           # Database and templates
 │   ├── db_setup.py
 │   ├── db_utils.py
 │   └── templates/
-│       └── index.html  # Flask frontend
+│       └── index.html
 ├── LLM_feedback/       # AI feedback generation
 │   └── got_feedback.py
-├── recordings/         # Temporary audio storage
-├── transcription/      # Speech-to-text conversion
+├── transcription/      # Audio transcription
 │   └── transcribe.py
 ├── TTS/               # Text-to-speech (future)
 │   └── speak.py
-└── UI/                # User interface modules
-    └── interface.py   # Streamlit dashboard
+└── UI/                # Streamlit interface
+    └── interface.py
 ```
 
-## 🎨 Frontend Features
+## 🎯 How to Use
 
-### Modern Web Interface (Flask)
-- **Responsive Design**: Works on desktop, tablet, and mobile
-- **Drag & Drop**: Easy file upload with visual feedback
-- **Real-time Processing**: Live progress indicators
-- **Beautiful UI**: Modern gradient design with animations
-- **Interactive Elements**: Hover effects and smooth transitions
+### Upload Audio File
+1. Click "Choose File" or drag & drop an audio file
+2. Supported formats: WAV, MP3, M4A, FLAC
+3. Click "Analyze Speech"
+4. View your results!
 
-### Interactive Dashboard (Streamlit)
-- **Multiple Input Methods**: Text, audio upload, voice recording
-- **Progress Tracking**: Visual progress bars and status updates
-- **Comprehensive Metrics**: Detailed speaking analytics
-- **Smart Suggestions**: AI-powered improvement tips
-- **Sidebar Navigation**: Easy access to features and tips
+### Record Live
+1. Click "Start Recording"
+2. Speak clearly into your microphone
+3. Click "Stop Recording" when done
+4. View your analysis results
 
-## 🔧 Configuration
+### Text Analysis
+1. Type or paste your speech text
+2. Click "Analyze Text"
+3. Get instant feedback
 
-### Supported Audio Formats
-- WAV (.wav)
-- MP3 (.mp3)
-- M4A (.m4a)
-- FLAC (.flac)
+## 🔍 Troubleshooting
 
-### Database
-The application uses SQLite for data storage. The database file (`feedback.db`) is automatically created when you first run the application.
+### Analysis Not Working?
+1. **Check Audio Quality**: Ensure your audio file contains clear speech
+2. **File Format**: Use supported formats (WAV, MP3, M4A, FLAC)
+3. **File Size**: Large files may take longer to process
+4. **API Key**: For enhanced feedback, add your Together AI API key to `.env`
 
-### API Keys
-For AI feedback functionality, you'll need an OpenAI API key. Set it in your environment variables or `.env` file.
+### Common Issues:
+- **"Could not transcribe audio"**: Try a different audio file with clearer speech
+- **"Analysis failed"**: Check your internet connection and try again
+- **"Template not found"**: Ensure all files are in the correct directories
 
-## 🛠️ Development
-
-### Running in Development Mode
+### Port Already in Use?
 ```bash
-# Flask with debug mode
-export FLASK_ENV=development
-python app.py
+# Find process using port 5001
+lsof -i :5001
 
-# Streamlit with debug
-streamlit run UI/interface.py --logger.level debug
+# Kill the process
+kill -9 <PID>
+
+# Or use a different port
+python app.py --port 5002
 ```
 
-### Adding New Features
-1. **Frontend**: Modify `database/templates/index.html` for Flask or `UI/interface.py` for Streamlit
-2. **Backend**: Add new routes in `app.py` or functions in the respective modules
-3. **Database**: Update `database/db_utils.py` for new data models
+### Missing Dependencies?
+```bash
+# Reinstall requirements
+pip install -r requirements.txt
 
-## 📊 Analysis Features
+# For PyAudio issues on macOS:
+brew install portaudio
+export LDFLAGS="-L/opt/homebrew/lib"
+export CFLAGS="-I/opt/homebrew/include"
+pip install pyaudio
+```
 
-### Filler Word Detection
-- Identifies common filler words: "um", "uh", "like", "you know", etc.
-- Calculates filler word percentage
-- Provides suggestions for improvement
+## 🌐 Deployment
 
-### AI Feedback
-- Content analysis and suggestions
-- Speaking style recommendations
-- Structure and flow improvements
-- Confidence-building tips
-
-### Speaking Metrics
-- Word count and speaking time estimates
-- Filler word frequency
-- Speaking pace analysis
-- Progress tracking over time
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions to platforms like:
+- Render (recommended)
+- Heroku
+- Railway
+- Vercel
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+4. Submit a pull request
 
-## 📝 License
+## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
 
-## 🆘 Support
+## 🙏 Acknowledgments
 
-If you encounter any issues:
-1. Check the console output for error messages
-2. Ensure all dependencies are installed
-3. Verify your API keys are set correctly
-4. Check that audio files are in supported formats
-
-## 🎯 Roadmap
-
-- [ ] Real-time voice recording
-- [ ] Advanced speech analytics
-- [ ] Multi-language support
-- [ ] Export reports
-- [ ] Mobile app
-- [ ] Integration with presentation software
+- OpenAI Whisper for speech transcription
+- Together AI for enhanced feedback
+- Flask and Streamlit communities
 
 ---
 
-**Made with ❤️ for better public speaking**
-=======
-# 🗣️ AI Speech Advisory Tool
-
-A lightweight AI-powered assistant that provides intelligent feedback on mock interview speech. This tool helps job seekers, students, and professionals improve their spoken communication by analyzing their voice, identifying filler words, and offering constructive feedback using large language models (LLMs).
-
----
-
-## 🚀 Features
-
-- 🎙️ Upload `.wav` or `.mp3` audio files
-- 🧠 Transcribes speech using OpenAI Whisper
-- 🔍 Detects filler words like "uh", "um", "like"
-- 🤖 GPT-4 generates feedback on clarity, confidence, and structure
-- 🔊 Optional voice-based feedback using TTS
-- 🧾 Stores results in a local SQLite database
->>>>>>> 1f8a9ca78796d6addb3a8b807d3a6100e36ee739
-
----
-
-## 🧠 Tech Stack
-
-| Category        | Tech Used                |
-|----------------|--------------------------|
-| Backend         | Python 3.x               |
-| Transcription   | OpenAI Whisper           |
-| NLP Evaluation  | OpenAI GPT-3.5 / GPT-4   |
-| Speech Analysis | Filler word detection    |
-| UI              | Streamlit / Flask (configurable) |
-| Voice Output    | gTTS or pyttsx3 (optional) |
-| Database        | SQLite (local storage)   |
-
----
-
-## 🗂️ Folder Structure
+**Ready to improve your speaking skills? Start analyzing your speech today!** 🎤✨
