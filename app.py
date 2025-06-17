@@ -34,7 +34,7 @@ def upload_audio():
     transcript = transcribe_audio(audio_path)
 
     # Analyze filler words
-    filler_count = filler_counter.count_fillers(transcript)
+    filler_count = filler_counter.count_filler(transcript)
     feedback = f"Filler word count: {filler_count}"
 
     # Save to Firebase
@@ -48,4 +48,4 @@ def upload_audio():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5002)

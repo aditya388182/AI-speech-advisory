@@ -1,6 +1,6 @@
 # analysis/analyze.py
 
-def count_filler_words(transcript: str) -> str:
+def count_filler(transcript: str) -> str:
     """
     Count filler words in the transcript and give basic feedback.
 
