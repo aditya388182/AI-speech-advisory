@@ -1,11 +1,18 @@
-# db_utils.py
+import firebase_admin
+from firebase_admin import credentials, firestore
+import datetime
 
-from db_setup import db
+cred = credentials.Certificate("firebase_key.json")
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
 
-def save_transcript_and_feedback(transcript: str, feedback: str):
-    doc_ref = db.collection("voice_feedback").document()
-    doc_ref.set({
+db = firestore.client()
+
+
+def save_transcript_and_feedback(transcript, feedback):
+    data = {
         "transcript": transcript,
-        "feedback": feedback
-    })
-    print("[INFO] Data saved to Firestore.")
+        "feedback": feedback,
+        "timestamp": datetime.datetime.utcnow()
+    }
+    db.collection("speech_feedback").add(data)

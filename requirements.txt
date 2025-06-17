@@ -1,0 +1,6 @@
+firebase-admin
+pyttsx3          # Only if you're using TTS
+python-dotenv 
+flask
+python-dotenv
+whisper  
