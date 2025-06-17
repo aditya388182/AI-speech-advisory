@@ -21,7 +21,7 @@ def get_feedback(transcript):
             "Content-Type": "application/json"
         },
         json={
-            "model": "mistralai/Mistral-7B-Instruct-v0.2", 
+            "model": "mistralai/Mistral-7B-Instruct-v0.2",
             "messages": [{"role": "user", "content": prompt}],
             "temperature": 0.7,
             "max_tokens": 500
